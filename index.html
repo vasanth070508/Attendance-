@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .calculation-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .calc-box {
+            background: #f0f4ff;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .calc-box h3 {
+            color: #667eea;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            font-size: 14px;
+        }
+        
+        .calc-row:last-child {
+            border-bottom: none;
+            padding-top: 15px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .calc-label {
+            color: #666;
+        }
+        
+        .calc-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .result-section {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .result-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .result-message {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .status-yes {
+            color: #10b981;
+        }
+        
+        .status-no {
+            color: #ef4444;
+        }
+        
+        .status-warning {
+            color: #f59e0b;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .summary-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-reset {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-reset:hover {
+            background: #d0d0d0;
+        }
+        
+        .btn-calculate {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-calculate:hover {
+            background: #5568d3;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .calculation-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Attendance Calculator</h1>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="recordedPresent">Recorded Present Hours</label>
+                <input type="number" id="recordedPresent" value="246" step="1">
+            </div>
+            <div class="input-group">
+                <label for="recordedAbsent">Recorded Absent Hours</label>
+                <input type="number" id="recordedAbsent" value="82" step="1">
+            </div>
+            <div class="input-group">
+                <label for="notEnteredPresent">Not Entered - Present Hours</label>
+                <input type="number" id="notEnteredPresent" value="49" step="1">
+            </div>
+            <div class="input-group">
+                <label for="notEnteredAbsent">Not Entered - Absent Hours</label>
+                <input type="number" id="notEnteredAbsent" value="23" step="1">
+            </div>
+            <div class="input-group">
+                <label for="compulsoryPresent">Upcoming Compulsory Present Hours</label>
+                <input type="number" id="compulsoryPresent" value="147" step="1">
+            </div>
+            <div class="input-group">
+                <label for="requestedLeave">Requested Leave Hours</label>
+                <input type="number" id="requestedLeave" value="21" step="1">
+            </div>
+            <div class="input-group">
+                <label for="targetAttendance">Target Attendance % (Min Required)</label>
+                <input type="number" id="targetAttendance" value="76" step="0.1" min="0" max="100">
+            </div>
+        </div>
+        
+        <!-- Calculation Section -->
+        <div class="calculation-section">
+            <div class="calc-box">
+                <h3>Present Hours Calculation</h3>
+                <div class="calc-row">
+                    <span class="calc-label">Recorded Present</span>
+                    <span class="calc-value" id="display1">246</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">+ Not Entered Present</span>
+                    <span class="calc-value" id="display2">49</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">+ Compulsory Present</span>
+                    <span class="calc-value" id="display3">147</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">= Total Present</span>
+                    <span class="calc-value" id="totalPresent" style="color: #10b981; font-size: 18px;">442</span>
+                </div>
+            </div>
+            
+            <div class="calc-box">
+                <h3>Absent Hours Calculation</h3>
+                <div class="calc-row">
+                    <span class="calc-label">Recorded Absent</span>
+                    <span class="calc-value" id="display4">82</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">+ Not Entered Absent</span>
+                    <span class="calc-value" id="display5">23</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">+ Requested Leave</span>
+                    <span class="calc-value" id="display6">21</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">= Total Absent</span>
+                    <span class="calc-value" id="totalAbsent" style="color: #ef4444; font-size: 18px;">126</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Result Section -->
+        <div class="result-section">
+            <div class="result-title">Your Attendance Percentage</div>
+            <div class="result-value" id="attendancePercent">77.75%</div>
+            <div class="result-message" id="resultMessage">
+                ✓ YES! You can take the leave. Your attendance will be above your target.
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="summary-label">Total Present Hours</div>
+                <div class="summary-value" id="summaryPresent">442</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Total Absent Hours</div>
+                <div class="summary-value" id="summaryAbsent">126</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Total Hours</div>
+                <div class="summary-value" id="summaryTotal">568</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Your Target %</div>
+                <div class="summary-value" id="summaryTarget">76%</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Margin Above/Below Target</div>
+                <div class="summary-value" id="summaryMargin" style="color: #10b981;">+1.75%</div>
+            </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="btn-calculate" onclick="calculate()">Calculate</button>
+            <button class="btn-reset" onclick="resetForm()">Reset to Default</button>
+        </div>
+        
+        <!-- Note -->
+        <div class="note">
+            <strong>📌 Note:</strong> All calculations are automatic as you type. The calculator updates in real-time. Adjust any values above to see how different scenarios affect your attendance percentage.
+        </div>
+    </div>
+    
+    <script>
+        // Get all input elements
+        const inputs = {
+            recordedPresent: document.getElementById('recordedPresent'),
+            recordedAbsent: document.getElementById('recordedAbsent'),
+            notEnteredPresent: document.getElementById('notEnteredPresent'),
+            notEnteredAbsent: document.getElementById('notEnteredAbsent'),
+            compulsoryPresent: document.getElementById('compulsoryPresent'),
+            requestedLeave: document.getElementById('requestedLeave'),
+            targetAttendance: document.getElementById('targetAttendance')
+        };
+        
+        // Add event listeners for real-time calculation
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+        
+        function calculate() {
+            // Get values
+            const recordedPresent = parseFloat(inputs.recordedPresent.value) || 0;
+            const recordedAbsent = parseFloat(inputs.recordedAbsent.value) || 0;
+            const notEnteredPresent = parseFloat(inputs.notEnteredPresent.value) || 0;
+            const notEnteredAbsent = parseFloat(inputs.notEnteredAbsent.value) || 0;
+            const compulsoryPresent = parseFloat(inputs.compulsoryPresent.value) || 0;
+            const requestedLeave = parseFloat(inputs.requestedLeave.value) || 0;
+            const targetAttendance = parseFloat(inputs.targetAttendance.value) || 76;
+            
+            // Calculate totals
+            const totalPresent = recordedPresent + notEnteredPresent + compulsoryPresent;
+            const totalAbsent = recordedAbsent + notEnteredAbsent + requestedLeave;
+            const totalHours = totalPresent + totalAbsent;
+            
+            // Calculate attendance percentage
+            const attendancePercent = totalHours > 0 ? (totalPresent / totalHours) * 100 : 0;
+            const margin = attendancePercent - targetAttendance;
+            
+            // Update display values
+            document.getElementById('display1').textContent = recordedPresent.toFixed(0);
+            document.getElementById('display2').textContent = notEnteredPresent.toFixed(0);
+            document.getElementById('display3').textContent = compulsoryPresent.toFixed(0);
+            document.getElementById('display4').textContent = recordedAbsent.toFixed(0);
+            document.getElementById('display5').textContent = notEnteredAbsent.toFixed(0);
+            document.getElementById('display6').textContent = requestedLeave.toFixed(0);
+            
+            // Update calculations
+            document.getElementById('totalPresent').textContent = totalPresent.toFixed(0);
+            document.getElementById('totalAbsent').textContent = totalAbsent.toFixed(0);
+            
+            // Update summary
+            document.getElementById('summaryPresent').textContent = totalPresent.toFixed(0);
+            document.getElementById('summaryAbsent').textContent = totalAbsent.toFixed(0);
+            document.getElementById('summaryTotal').textContent = totalHours.toFixed(0);
+            document.getElementById('summaryTarget').textContent = targetAttendance.toFixed(1) + '%';
+            
+            // Update result
+            const resultPercent = document.getElementById('attendancePercent');
+            const resultMessage = document.getElementById('resultMessage');
+            const marginDisplay = document.getElementById('summaryMargin');
+            
+            resultPercent.textContent = attendancePercent.toFixed(2) + '%';
+            
+            if (attendancePercent >= targetAttendance) {
+                resultPercent.style.color = '#10b981';
+                resultMessage.innerHTML = `<span class="status-yes">✓ YES! You can take the leave.</span><br>Your attendance will be <strong>${attendancePercent.toFixed(2)}%</strong>, which is above your target of <strong>${targetAttendance.toFixed(1)}%</strong>`;
+                marginDisplay.style.color = '#10b981';
+                marginDisplay.textContent = '+' + margin.toFixed(2) + '%';
+            } else if (attendancePercent >= targetAttendance - 1) {
+                resultPercent.style.color = '#f59e0b';
+                resultMessage.innerHTML = `<span class="status-warning">⚠ WARNING: You can take the leave, but it's close!</span><br>Your attendance will be <strong>${attendancePercent.toFixed(2)}%</strong>, which is slightly below your target of <strong>${targetAttendance.toFixed(1)}%</strong>`;
+                marginDisplay.style.color = '#f59e0b';
+                marginDisplay.textContent = margin.toFixed(2) + '%';
+            } else {
+                resultPercent.style.color = '#ef4444';
+                resultMessage.innerHTML = `<span class="status-no">✗ NO! You cannot take all the leave.</span><br>Your attendance would be <strong>${attendancePercent.toFixed(2)}%</strong>, which is below your target of <strong>${targetAttendance.toFixed(1)}%</strong>. You need <strong>${(totalPresent - margin * totalHours / 100).toFixed(0)}</strong> more present hours.`;
+                marginDisplay.style.color = '#ef4444';
+                marginDisplay.textContent = margin.toFixed(2) + '%';
+            }
+        }
+        
+        function resetForm() {
+            inputs.recordedPresent.value = '246';
+            inputs.recordedAbsent.value = '82';
+            inputs.notEnteredPresent.value = '49';
+            inputs.notEnteredAbsent.value = '23';
+            inputs.compulsoryPresent.value = '147';
+            inputs.requestedLeave.value = '21';
+            inputs.targetAttendance.value = '76';
+            calculate();
+        }
+        
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
